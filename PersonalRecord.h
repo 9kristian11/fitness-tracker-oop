@@ -25,5 +25,4 @@ public:
 
     void displayRecord() const;
 };
-
 #endif
