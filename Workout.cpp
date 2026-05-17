@@ -47,6 +47,16 @@ void Workout::removeExercise(int index) {
         cout << "Invalid exercise index." << endl;
     }
 }
+Exercise* Workout::getExercise(int index) {
+    if (index >= 0 && index < exercises.size()) {
+        return exercises[index];
+    }
+
+    return nullptr;
+}
+int Workout::getExerciseCount() const {
+    return exercises.size();
+}
 void Workout::displayExercises() const {
     if (exercises.empty()) {
         cout << "No exercises in this workout." << endl;

@@ -35,6 +35,8 @@ public:
 
     void addWorkout(Workout workout);
     void removeWorkout(int index);
+    Workout* getWorkout(int index);
+    int getWorkoutCount() const;
     void displayWorkouts() const;
 
     void addGoal(Goal goal);

@@ -27,6 +27,8 @@ public:
 
     void addExercise(Exercise* exercise);
     void removeExercise(int index);
+    Exercise* getExercise(int index);
+    int getExerciseCount() const;
     void displayExercises() const;
     void displayWorkout() const;
 };

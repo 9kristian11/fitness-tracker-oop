@@ -56,6 +56,15 @@ void User::removeWorkout(int index) {
         cout << "Invalid workout index." << endl;
     }
 }
+Workout* User::getWorkout(int index) {
+    if (index >= 0 && index < workouts.size()) {
+        return &workouts[index];
+    }
+    return nullptr;
+}
+int User::getWorkoutCount() const {
+    return workouts.size();
+}
 void User::displayWorkouts() const {
     if (workouts.empty()) {
         cout << "No workouts added yet." << endl;
