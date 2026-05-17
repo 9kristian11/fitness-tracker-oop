@@ -7,7 +7,6 @@ class CardioExercise : public Exercise {
 private:
     int duration;
     double distance;
-
 public:
     CardioExercise();
     CardioExercise(string name, int duration, double distance);
@@ -20,5 +19,4 @@ public:
 
     void display() const override;
 };
-
 #endif
