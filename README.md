@@ -1,49 +1,89 @@
-# fitness-tracker-oop
-This project is a simple fitness tracker created for the Object-Oriented Programming class.
-The application allows users to:
-- create and manage a user profile;
-- add workouts;
-- add exercises to workouts;
-- view workout history;
-- track personal progress.
-The goal of the project is to practice object-oriented programming concepts such as:
-- classes and objects;
-- inheritance;
-- encapsulation;
-- abstraction;
-- class relationships.
-Main Functionalities:
-1. User Profile Management
-The user can create and edit a profile with:
-- name
-- gender
-- age
-- weight
-- height
-2. Workout Management
-The user can:
-- add workouts
-- edit workouts
-- remove workouts
-3.Exercise Management
-Exercises can be added to workouts with:
-- sets
-- repetitions
-- weight
-4. Workout History
-Shows all completed workouts.
-5. Class Hierarchy
-Base Class
-- `Exercise` (abstract class)
-Derived Classes
-- `StrengthExercise`
-- `CardioExercise`
-Other Classes
-- `User`
-- `Workout`
-- `PersonalRecord`
-- `StatisticsManager`
-6.Technologies
-- C++
-- Object-Oriented Programming
-- STL (`vector`, `string`)
+# Fitness Tracker OOP Project
+
+## Description
+Fitness Tracker is a C++ console application developed as a school Object-Oriented Programming project.
+The purpose of the project is to help users keep track of their workouts, exercises, goals, personal records, and overall fitness progress. The application allows users to create a profile, manage workouts, save their data, and view different statistics.
+
+## Features:
+### User Profile Management
+* Create and edit a user profile
+* Store information such as:
+  * Name
+  * Gender
+  * Age
+  * Weight
+  * Height
+    
+### Workout Management
+* Add workouts
+* Edit workouts
+* Delete workouts
+* View workout history
+  
+### Exercise Management
+* Add exercises to workouts
+* Support for different exercise types:
+  * StrengthExercise
+  * CardioExercise
+    
+### Personal Records
+* Add personal records (PRs)
+* View saved personal records
+
+### Goals
+* Create fitness goals
+* View current goals
+
+### Statistics
+* View monthly workout statistics
+* Calculate total training volume
+
+### Search
+* Search workouts by date
+
+### Inactivity Reminder
+* Check how many days have passed since the last workout
+* Display a reminder if the user has been inactive
+
+### Data Persistence
+* Save data to a file
+* Load saved data when the program starts
+
+## OOP Concepts Used:
+### Encapsulation
+Class data is stored as private or protected members and accessed through methods.
+
+### Inheritance
+The project uses inheritance through the Exercise hierarchy:
+Exercise
+* StrengthExercise
+* CardioExercise
+
+### Polymorphism
+Workouts store exercises using Exercise pointers, allowing different exercise types to be handled through a common interface.
+
+### Composition
+A User contains:
+* Workouts
+* Goals
+* Personal Records
+
+## Project Structure
+* User
+* Workout
+* Exercise
+* StrengthExercise
+* CardioExercise
+* Goal
+* PersonalRecord
+* StatisticsManager
+
+## Technologies Used:
+* C++
+* Object-Oriented Programming
+* STL (vector, string)
+* File Handling (fstream)
+
+## Author:
+Kristian Lyubomirov
+10A TUES
