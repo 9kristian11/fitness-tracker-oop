@@ -1,5 +1,11 @@
 #include "Functions.h"
 #include "StrengthExercise.h"
+#include "PersonalRecord.h"
+#include "Goal.h"
+#include <ctime>
+#include <iomanip>
+#include <sstream>
+
 #include <iostream>
 
 using namespace std;
@@ -191,4 +197,224 @@ void workoutHistory(const User& user) {
     cout << "Workout History" << endl;
     cout << "---------------" << endl;
     user.displayWorkouts();
+}
+
+
+void trackPR(User& user) {
+    int choice;
+
+    do {
+        cout << endl;
+        cout << "Track Personal Records" << endl;
+        cout << "----------------------" << endl;
+        cout << "1. Add or update personal record" << endl;
+        cout << "2. Display personal records" << endl;
+        cout << "0. Back" << endl;
+        cout << "Choose: ";
+        cin >> choice;
+        cin.ignore();
+
+        if (choice == 1) {
+            string exerciseName;
+            double value;
+            string unit;
+            string dateAchieved;
+
+            cout << "Enter exercise name: ";
+            getline(cin, exerciseName);
+
+            cout << "Enter record value: ";
+            cin >> value;
+            cin.ignore();
+
+            cout << "Enter unit, for example kg, km, minutes: ";
+            getline(cin, unit);
+
+            cout << "Enter date achieved, for example 2026-05-31: ";
+            getline(cin, dateAchieved);
+
+            bool found = false;
+
+            for (int i = 0; i < user.getPersonalRecordCount(); i++) {
+                PersonalRecord* record = user.getPersonalRecord(i);
+
+                if (record != nullptr && record->getExerciseName() == exerciseName) {
+                    found = true;
+
+                    if (value > record->getValue()) {
+                        record->setValue(value);
+                        record->setUnit(unit);
+                        record->setDateAchieved(dateAchieved);
+
+                        cout << "New personal record saved!" << endl;
+                    }
+                    else {
+                        cout << "This is not better than your current record." << endl;
+                    }
+                }
+            }
+
+            if (!found) {
+                PersonalRecord newRecord(exerciseName, value, unit, dateAchieved);
+                user.addPersonalRecord(newRecord);
+
+                cout << "Personal record added successfully." << endl;
+            }
+        }
+        else if (choice == 2) {
+            user.displayPersonalRecords();
+        }
+
+    } while (choice != 0);
+}
+
+void monthlyStats(User& user) {
+    string month;
+    int workoutCount = 0;
+    double totalVolume = 0;
+
+    cout << endl;
+    cout << "Monthly Statistics" << endl;
+    cout << "------------------" << endl;
+
+    cout << "Enter month, for example 2026-05: ";
+    getline(cin, month);
+
+    for (int i = 0; i < user.getWorkoutCount(); i++) {
+        Workout* workout = user.getWorkout(i);
+
+        if (workout != nullptr) {
+            string date = workout->getDate();
+
+            if (date.substr(0, 7) == month) {
+                workoutCount++;
+
+                for (int j = 0; j < workout->getExerciseCount(); j++) {
+                    Exercise* exercise = workout->getExercise(j);
+
+                    if (exercise != nullptr) {
+                        totalVolume += exercise->getSets() * exercise->getReps() * exercise->getWeight();
+                    }
+                }
+            }
+        }
+    }
+
+    cout << "Workouts this month: " << workoutCount << endl;
+    cout << "Total training volume: " << totalVolume << endl;
+}
+
+void manageGoals(User& user) {
+    int choice;
+
+    do {
+        cout << endl;
+        cout << "Manage Goals" << endl;
+        cout << "------------" << endl;
+        cout << "1. Add goal" << endl;
+        cout << "2. Update goal progress" << endl;
+        cout << "3. Display goals" << endl;
+        cout << "0. Back" << endl;
+        cout << "Choose: ";
+        cin >> choice;
+        cin.ignore();
+
+        if (choice == 1) {
+            string description;
+            int targetValue;
+
+            cout << "Enter goal description: ";
+            getline(cin, description);
+
+            cout << "Enter target value: ";
+            cin >> targetValue;
+            cin.ignore();
+
+            Goal goal(description, targetValue);
+            user.addGoal(goal);
+
+            cout << "Goal added successfully." << endl;
+        }
+        else if (choice == 2) {
+            int index;
+            int currentValue;
+
+            user.displayGoals();
+
+            cout << "Enter goal number to update: ";
+            cin >> index;
+
+            cout << "Enter current value: ";
+            cin >> currentValue;
+            cin.ignore();
+
+            Goal* goal = user.getGoal(index - 1);
+
+            if (goal != nullptr) {
+                goal->setCurrentValue(currentValue);
+                cout << "Goal progress updated successfully." << endl;
+            }
+            else {
+                cout << "Invalid goal number." << endl;
+            }
+        }
+        else if (choice == 3) {
+            user.displayGoals();
+        }
+
+    } while (choice != 0);
+}
+
+time_t convertDateToTime(string date) {
+    tm timeInfo = {};
+    stringstream ss(date);
+
+    ss >> get_time(&timeInfo, "%Y-%m-%d");
+
+    if (ss.fail()) {
+        return -1;
+    }
+
+    timeInfo.tm_hour = 12;
+
+    return mktime(&timeInfo);
+}
+
+void inactivityReminder(User& user) {
+    if (user.getWorkoutCount() == 0) {
+        cout << "You have no workouts yet. Time to start training!" << endl;
+        return;
+    }
+
+    time_t latestWorkoutTime = -1;
+
+    for (int i = 0; i < user.getWorkoutCount(); i++) {
+        Workout* workout = user.getWorkout(i);
+
+        if (workout != nullptr) {
+            time_t workoutTime = convertDateToTime(workout->getDate());
+
+            if (workoutTime > latestWorkoutTime) {
+                latestWorkoutTime = workoutTime;
+            }
+        }
+    }
+
+    if (latestWorkoutTime == -1) {
+        cout << "Could not check inactivity because workout dates are invalid." << endl;
+        return;
+    }
+
+    time_t currentTime = time(nullptr);
+    double secondsPassed = difftime(currentTime, latestWorkoutTime);
+    int daysPassed = secondsPassed / 86400;
+
+    cout << "Days since last workout: " << daysPassed << endl;
+
+    if (daysPassed >= 3) {
+        cout << "Reminder: You have not trained for 3 or more days." << endl;
+    }
+    else {
+        cout << "Good job! You have trained recently." << endl;
+    }
 }

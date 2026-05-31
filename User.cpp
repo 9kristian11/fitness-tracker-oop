@@ -79,6 +79,17 @@ void User::displayWorkouts() const {
 void User::addGoal(Goal goal) {
     goals.push_back(goal);
 }
+Goal* User::getGoal(int index) {
+    if (index >= 0 && index < (int)goals.size()) {
+        return &goals[index];
+    }
+
+    return nullptr;
+}
+
+int User::getGoalCount() const {
+    return goals.size();
+}
 void User::displayGoals() const {
     if (goals.empty()) {
         cout << "No goals added yet." << endl;
@@ -92,6 +103,17 @@ void User::displayGoals() const {
 }
 void User::addPersonalRecord(PersonalRecord record) {
     personalRecords.push_back(record);
+}
+PersonalRecord* User::getPersonalRecord(int index) {
+    if (index >= 0 && index < (int)personalRecords.size()) {
+        return &personalRecords[index];
+    }
+
+    return nullptr;
+}
+
+int User::getPersonalRecordCount() const {
+    return personalRecords.size();
 }
 void User::displayPersonalRecords() const {
     if (personalRecords.empty()) {

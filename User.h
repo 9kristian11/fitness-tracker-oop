@@ -40,9 +40,13 @@ public:
     void displayWorkouts() const;
 
     void addGoal(Goal goal);
+    Goal* getGoal(int index);
+    int getGoalCount() const;
     void displayGoals() const;
 
     void addPersonalRecord(PersonalRecord record);
+    PersonalRecord* getPersonalRecord(int index);
+    int getPersonalRecordCount() const;
     void displayPersonalRecords() const;
 
     void displayProfile() const;
