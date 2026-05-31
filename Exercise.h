@@ -22,6 +22,8 @@ class Exercise{
     void setReps(int reps); 
     void setWeight(double weight);
     virtual void display() const=0;
+    virtual Exercise* clone() const = 0;
+    
 };
 #endif
 

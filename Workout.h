@@ -15,6 +15,9 @@ public:
     Workout();
     Workout(string date, string description);
 
+    Workout(const Workout& other);
+    Workout& operator=(const Workout& other);
+
     ~Workout();
 
     string getDate() const;

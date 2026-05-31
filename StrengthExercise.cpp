@@ -11,4 +11,9 @@ void StrengthExercise::display() const {
     cout << "Sets: " << sets << endl;
     cout << "Reps: " << reps << endl;
     cout << "Weight: " << weight << " kg" << endl;
+    
+}
+
+Exercise* StrengthExercise::clone() const {
+    return new StrengthExercise(name, sets, reps, weight);
 }

@@ -36,6 +36,7 @@ if (loadChoice == 'y' || loadChoice == 'Y') {
         cout << "8. Display profile" << endl;
         cout << "9. Save data" << endl;
         cout << "10. Load data" << endl;
+        cout << "11. Search Workout by Date" << endl;
         cout << "0. Exit" << endl;
         cout << "Choose: ";
         cin >> choice;
@@ -71,7 +72,9 @@ if (loadChoice == 'y' || loadChoice == 'Y') {
         else if (choice == 10) {
             loadData(user);
         }
-
+        else if (choice == 11) {
+    searchWorkoutByDate(user);
+}
     } while (choice != 0);
 
     cout << "Goodbye!" << endl;

@@ -15,4 +15,7 @@ void inactivityReminder(User& user);
 void saveData(User& user);
 void loadData(User& user);
 
+void searchWorkoutByDate(User& user);
+
+
 #endif

@@ -8,5 +8,7 @@ public:
     StrengthExercise(string name, int sets, int reps, double weight);
     
     void display() const override;
+    Exercise* clone() const override;
+
 };
 #endif

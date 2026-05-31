@@ -11,6 +11,37 @@ Workout::Workout(string date, string description) {
     this->description = description;
     isCompleted = false;
 }
+
+Workout::Workout(const Workout& other) {
+    date = other.date;
+    description = other.description;
+    isCompleted = other.isCompleted;
+
+    for (int i = 0; i < other.exercises.size(); i++) {
+        exercises.push_back(other.exercises[i]->clone());
+    }
+}
+
+Workout& Workout::operator=(const Workout& other) {
+    if (this != &other) {
+        for (int i = 0; i < exercises.size(); i++) {
+            delete exercises[i];
+        }
+
+        exercises.clear();
+
+        date = other.date;
+        description = other.description;
+        isCompleted = other.isCompleted;
+
+        for (int i = 0; i < other.exercises.size(); i++) {
+            exercises.push_back(other.exercises[i]->clone());
+        }
+    }
+
+    return *this;
+}
+
 Workout::~Workout() {
     for (int i = 0; i < exercises.size(); i++) {
         delete exercises[i];

@@ -18,5 +18,7 @@ public:
     void setDistance(double distance);
 
     void display() const override;
+
+    Exercise* clone() const override;
 };
 #endif

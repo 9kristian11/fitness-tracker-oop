@@ -755,3 +755,32 @@ void loadData(User& user) {
 
     cout << "Data loaded successfully." << endl;
 }
+
+void searchWorkoutByDate(User& user) {
+    string date;
+    bool found = false;
+
+    cout << endl;
+    cout << "Search Workout by Date" << endl;
+    cout << "----------------------" << endl;
+
+    cout << "Enter date, for example 2026-05-31: ";
+    getline(cin, date);
+
+    for (int i = 0; i < user.getWorkoutCount(); i++) {
+        Workout* workout = user.getWorkout(i);
+
+        if (workout != nullptr && workout->getDate() == date) {
+            found = true;
+
+            cout << endl;
+            cout << "Workout #" << i + 1 << endl;
+            workout->displayWorkout();
+            workout->displayExercises();
+        }
+    }
+
+    if (found == false) {
+        cout << "No workouts found for this date." << endl;
+    }
+}

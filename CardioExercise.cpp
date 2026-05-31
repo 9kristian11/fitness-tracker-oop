@@ -27,3 +27,7 @@ void CardioExercise::display() const {
     cout << "Duration: " << duration << " minutes" << endl;
     cout << "Distance: " << distance << " km" << endl;
 }
+
+Exercise* CardioExercise::clone() const {
+    return new CardioExercise(name, duration, distance);
+}
