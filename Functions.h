@@ -2,7 +2,7 @@
 #define FUNCTIONS_H
 
 #include "User.h"
-void manageUserProfile(User& user);
+void manageUserProfile(User& user, bool& dataLoaded);
 void manageWorkouts(User& user);
 void manageExercises(Workout& workout);
 void workoutHistory(const User& user);

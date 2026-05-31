@@ -5,11 +5,22 @@
 using namespace std;
 
 int main() {
-    User user;
-    int choice;
+ User user;
+int choice;
+char loadChoice;
+bool dataLoaded = false;
 
+
+cout << "Do you want to load saved data? y/n: ";
+cin >> loadChoice;
+cin.ignore();
+
+if (loadChoice == 'y' || loadChoice == 'Y') {
     loadData(user);
-    inactivityReminder(user);
+    dataLoaded = true;
+
+}
+    
 
     do {
         cout << endl;
@@ -31,7 +42,7 @@ int main() {
         cin.ignore();
 
         if (choice == 1) {
-            manageUserProfile(user);
+            manageUserProfile(user, dataLoaded);
         }
         else if (choice == 2) {
             manageWorkouts(user);
@@ -62,8 +73,6 @@ int main() {
         }
 
     } while (choice != 0);
-
-    saveData(user);
 
     cout << "Goodbye!" << endl;
 

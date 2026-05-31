@@ -1,16 +1,8 @@
-asen
+kristian
 male
-18
-80
-18
-1
-2024-11-22
-legs
-0
-1
-Cardio
-stairs master
-90
+10
 20
+200
+0
 0
 0

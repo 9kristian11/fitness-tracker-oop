@@ -11,40 +11,50 @@
 #include <iostream>
 
 using namespace std;
-void manageUserProfile(User& user) {
+
+
+void manageUserProfile(User& user, bool& dataLoaded) {
     string name;
     string gender;
     int age;
     double weight;
     double height;
-    char choice;
 
     cout << endl;
     cout << "Manage User Profile" << endl;
     cout << "-------------------" << endl;
 
-    cout << "Are you creating a completely new user? y/n: ";
-    cin >> choice;
-    cin.ignore();
+    if (dataLoaded == true) {
+        char clearChoice;
 
-    if (choice == 'y' || choice == 'Y') {
-        user.clearData();
-        cout << "Old user data cleared." << endl;
+        cout << "Are you sure you want to clear all user data? y/n: ";
+        cin >> clearChoice;
+        cin.ignore();
+
+        if (clearChoice == 'y' || clearChoice == 'Y') {
+            user.clearData();
+            dataLoaded = false;
+            cout << "Current loaded user data cleared from the program." << endl;
+        }
+        else {
+            cout << "Returning back to menu." << endl;
+            return;
+        }
     }
 
     cout << "Enter name: ";
     getline(cin, name);
 
-    cout << "Enter gender(male or female): ";
+    cout << "Enter gender (male/female): ";
     getline(cin, gender);
 
     cout << "Enter age: ";
     cin >> age;
 
-    cout << "Enter weight(kg): ";
+    cout << "Enter weight (kg): ";
     cin >> weight;
 
-    cout << "Enter height(cm): ";
+    cout << "Enter height (cm): ";
     cin >> height;
 
     cin.ignore();
@@ -57,6 +67,7 @@ void manageUserProfile(User& user) {
 
     cout << "Profile saved successfully." << endl;
 }
+
 void manageWorkouts(User& user) {
     int choice;
     do {
@@ -593,11 +604,24 @@ void saveData(User& user) {
 
     cout << "Data saved successfully." << endl;
 }
+
+
 void loadData(User& user) {
     ifstream file("fitness_data.txt");
 
     if (!file) {
         cout << "No saved data found." << endl;
+        return;
+    }
+
+    char overwriteChoice;
+
+    cout << "Loading data will overwrite the current user data. Continue? y/n: ";
+    cin >> overwriteChoice;
+    cin.ignore();
+
+    if (overwriteChoice != 'y' && overwriteChoice != 'Y') {
+        cout << "Load cancelled." << endl;
         return;
     }
 
