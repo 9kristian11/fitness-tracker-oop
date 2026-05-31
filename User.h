@@ -50,5 +50,8 @@ public:
     void displayPersonalRecords() const;
 
     void displayProfile() const;
+
+    void clearData();
+
 };
 #endif

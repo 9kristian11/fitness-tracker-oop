@@ -11,4 +11,8 @@ void trackPR(User& user);
 void monthlyStats(User& user);
 void manageGoals(User& user);
 void inactivityReminder(User& user);
+
+void saveData(User& user);
+void loadData(User& user);
+
 #endif

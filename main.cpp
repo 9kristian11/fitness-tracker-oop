@@ -8,6 +8,7 @@ int main() {
     User user;
     int choice;
 
+    loadData(user);
     inactivityReminder(user);
 
     do {
@@ -22,6 +23,8 @@ int main() {
         cout << "6. Manage goals" << endl;
         cout << "7. Inactivity reminder" << endl;
         cout << "8. Display profile" << endl;
+        cout << "9. Save data" << endl;
+        cout << "10. Load data" << endl;
         cout << "0. Exit" << endl;
         cout << "Choose: ";
         cin >> choice;
@@ -51,8 +54,16 @@ int main() {
         else if (choice == 8) {
             user.displayProfile();
         }
+        else if (choice == 9) {
+            saveData(user);
+        }
+        else if (choice == 10) {
+            loadData(user);
+        }
 
     } while (choice != 0);
+
+    saveData(user);
 
     cout << "Goodbye!" << endl;
 

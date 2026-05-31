@@ -5,6 +5,8 @@
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+#include <fstream>
+#include "CardioExercise.h"
 
 #include <iostream>
 
@@ -15,25 +17,44 @@ void manageUserProfile(User& user) {
     int age;
     double weight;
     double height;
+    char choice;
+
     cout << endl;
     cout << "Manage User Profile" << endl;
     cout << "-------------------" << endl;
+
+    cout << "Are you creating a completely new user? y/n: ";
+    cin >> choice;
+    cin.ignore();
+
+    if (choice == 'y' || choice == 'Y') {
+        user.clearData();
+        cout << "Old user data cleared." << endl;
+    }
+
     cout << "Enter name: ";
     getline(cin, name);
-    cout << "Enter gender: ";
+
+    cout << "Enter gender(male or female): ";
     getline(cin, gender);
+
     cout << "Enter age: ";
     cin >> age;
-    cout << "Enter weight: ";
+
+    cout << "Enter weight(kg): ";
     cin >> weight;
-    cout << "Enter height: ";
+
+    cout << "Enter height(cm): ";
     cin >> height;
+
     cin.ignore();
+
     user.setName(name);
     user.setGender(gender);
     user.setAge(age);
     user.setWeight(weight);
     user.setHeight(height);
+
     cout << "Profile saved successfully." << endl;
 }
 void manageWorkouts(User& user) {
@@ -54,7 +75,7 @@ void manageWorkouts(User& user) {
         if (choice == 1) {
             string date;
             string description;
-            cout << "Enter workout date: ";
+            cout << "Enter workout date(YYYY-MM-DD): ";
             getline(cin, date);
             cout << "Enter workout description: ";
             getline(cin, description);
@@ -73,7 +94,7 @@ void manageWorkouts(User& user) {
             cin.ignore();
             Workout* workout = user.getWorkout(index - 1);
             if (workout != nullptr) {
-                cout << "Enter new date: ";
+                cout << "Enter new date(YYYY-MM-DD): ";
                 getline(cin, date);
                 cout << "Enter new description: ";
                 getline(cin, description);
@@ -141,7 +162,7 @@ void manageExercises(Workout& workout) {
             cin >> sets;
             cout << "Enter reps: ";
             cin >> reps;
-            cout << "Enter weight: ";
+            cout << "Enter weight(kg): ";
             cin >> weight;
             cin.ignore();
             Exercise* exercise = new StrengthExercise(name, sets, reps, weight);
@@ -166,7 +187,7 @@ void manageExercises(Workout& workout) {
                 cin >> sets;
                 cout << "Enter new reps: ";
                 cin >> reps;
-                cout << "Enter new weight: ";
+                cout << "Enter new weight(kg): ";
                 cin >> weight;
                 cin.ignore();
                 exercise->setName(name);
@@ -417,4 +438,185 @@ void inactivityReminder(User& user) {
     else {
         cout << "Good job! You have trained recently." << endl;
     }
+}
+
+
+void saveData(User& user) {
+    ofstream file("fitness_data.txt");
+
+    if (!file) {
+        cout << "Could not open file for saving." << endl;
+        return;
+    }
+
+    file << user.getName() << endl;
+    file << user.getGender() << endl;
+    file << user.getAge() << endl;
+    file << user.getWeight() << endl;
+    file << user.getHeight() << endl;
+
+    file << user.getWorkoutCount() << endl;
+
+    for (int i = 0; i < user.getWorkoutCount(); i++) {
+        Workout* workout = user.getWorkout(i);
+
+        file << workout->getDate() << endl;
+        file << workout->getDescription() << endl;
+        file << workout->getIsCompleted() << endl;
+
+        file << workout->getExerciseCount() << endl;
+
+        for (int j = 0; j < workout->getExerciseCount(); j++) {
+            Exercise* exercise = workout->getExercise(j);
+
+            file << exercise->getName() << endl;
+            file << exercise->getSets() << endl;
+            file << exercise->getReps() << endl;
+            file << exercise->getWeight() << endl;
+        }
+    }
+
+    file << user.getGoalCount() << endl;
+
+    for (int i = 0; i < user.getGoalCount(); i++) {
+        Goal* goal = user.getGoal(i);
+
+        file << goal->getDescription() << endl;
+        file << goal->getTargetValue() << endl;
+        file << goal->getCurrentValue() << endl;
+    }
+
+    file << user.getPersonalRecordCount() << endl;
+
+    for (int i = 0; i < user.getPersonalRecordCount(); i++) {
+        PersonalRecord* record = user.getPersonalRecord(i);
+
+        file << record->getExerciseName() << endl;
+        file << record->getValue() << endl;
+        file << record->getUnit() << endl;
+        file << record->getDateAchieved() << endl;
+    }
+
+    file.close();
+
+    cout << "Data saved successfully." << endl;
+}
+
+void loadData(User& user) {
+    ifstream file("fitness_data.txt");
+
+    if (!file) {
+        cout << "No saved data found." << endl;
+        return;
+    }
+
+    user.clearData();
+
+    string name;
+    string gender;
+    int age;
+    double weight;
+    double height;
+
+    getline(file, name);
+    getline(file, gender);
+    file >> age;
+    file >> weight;
+    file >> height;
+    file.ignore();
+
+    user.setName(name);
+    user.setGender(gender);
+    user.setAge(age);
+    user.setWeight(weight);
+    user.setHeight(height);
+
+    int workoutCount;
+    file >> workoutCount;
+    file.ignore();
+
+    for (int i = 0; i < workoutCount; i++) {
+        string date;
+        string description;
+        bool isCompleted;
+
+        getline(file, date);
+        getline(file, description);
+        file >> isCompleted;
+        file.ignore();
+
+        Workout workout(date, description);
+        workout.setIsCompleted(isCompleted);
+
+        user.addWorkout(workout);
+
+        Workout* savedWorkout = user.getWorkout(user.getWorkoutCount() - 1);
+
+        int exerciseCount;
+        file >> exerciseCount;
+        file.ignore();
+
+        for (int j = 0; j < exerciseCount; j++) {
+            string exerciseName;
+            int sets;
+            int reps;
+            double exerciseWeight;
+
+            getline(file, exerciseName);
+            file >> sets;
+            file >> reps;
+            file >> exerciseWeight;
+            file.ignore();
+
+            Exercise* exercise = new StrengthExercise(exerciseName, sets, reps, exerciseWeight);
+
+            if (savedWorkout != nullptr) {
+                savedWorkout->addExercise(exercise);
+            }
+        }
+    }
+
+    int goalCount;
+    file >> goalCount;
+    file.ignore();
+
+    for (int i = 0; i < goalCount; i++) {
+        string description;
+        int targetValue;
+        int currentValue;
+
+        getline(file, description);
+        file >> targetValue;
+        file >> currentValue;
+        file.ignore();
+
+        Goal goal(description, targetValue);
+        goal.setCurrentValue(currentValue);
+
+        user.addGoal(goal);
+    }
+
+    int recordCount;
+    file >> recordCount;
+    file.ignore();
+
+    for (int i = 0; i < recordCount; i++) {
+        string exerciseName;
+        double value;
+        string unit;
+        string dateAchieved;
+
+        getline(file, exerciseName);
+        file >> value;
+        file.ignore();
+        getline(file, unit);
+        getline(file, dateAchieved);
+
+        PersonalRecord record(exerciseName, value, unit, dateAchieved);
+        user.addPersonalRecord(record);
+    }
+
+    file.close();
+
+    cout << "Data loaded successfully." << endl;
 }

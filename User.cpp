@@ -133,3 +133,15 @@ void User::displayProfile() const {
     cout << "Weight: " << weight << " kg" << endl;
     cout << "Height: " << height << " cm" << endl;
 }
+
+void User::clearData() {
+    workouts.clear();
+    goals.clear();
+    personalRecords.clear();
+
+    name = "";
+    gender = "";
+    age = 0;
+    weight = 0;
+    height = 0;
+}
