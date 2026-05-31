@@ -139,11 +139,12 @@ void manageWorkouts(User& user) {
 }
 void manageExercises(Workout& workout) {
     int choice;
+
     do {
         cout << endl;
         cout << "Manage Exercises" << endl;
         cout << "----------------" << endl;
-        cout << "1. Add strength exercise" << endl;
+        cout << "1. Add exercise" << endl;
         cout << "2. Edit exercise" << endl;
         cout << "3. Remove exercise" << endl;
         cout << "4. Display exercises" << endl;
@@ -151,49 +152,127 @@ void manageExercises(Workout& workout) {
         cout << "Choose: ";
         cin >> choice;
         cin.ignore();
+
         if (choice == 1) {
-            string name;
-            int sets;
-            int reps;
-            double weight;
-            cout << "Enter exercise name: ";
-            getline(cin, name);
-            cout << "Enter sets: ";
-            cin >> sets;
-            cout << "Enter reps: ";
-            cin >> reps;
-            cout << "Enter weight(kg): ";
-            cin >> weight;
+            int type;
+
+            cout << endl;
+            cout << "Choose exercise type" << endl;
+            cout << "1. Strength exercise" << endl;
+            cout << "2. Cardio exercise" << endl;
+            cout << "Choose: ";
+            cin >> type;
             cin.ignore();
-            Exercise* exercise = new StrengthExercise(name, sets, reps, weight);
-            workout.addExercise(exercise);
-            cout << "Exercise added successfully." << endl;
+
+            if (type == 1) {
+                string name;
+                int sets;
+                int reps;
+                double weight;
+
+                cout << "Enter exercise name: ";
+                getline(cin, name);
+
+                cout << "Enter sets: ";
+                cin >> sets;
+
+                cout << "Enter reps: ";
+                cin >> reps;
+
+                cout << "Enter weight: ";
+                cin >> weight;
+                cin.ignore();
+
+                Exercise* exercise = new StrengthExercise(name, sets, reps, weight);
+                workout.addExercise(exercise);
+
+                cout << "Strength exercise added successfully." << endl;
+            }
+            else if (type == 2) {
+                string name;
+                int duration;
+                double distance;
+
+                cout << "Enter exercise name: ";
+                getline(cin, name);
+
+                cout << "Enter duration in minutes: ";
+                cin >> duration;
+
+                cout << "Enter distance in km: ";
+                cin >> distance;
+                cin.ignore();
+
+                Exercise* exercise = new CardioExercise(name, duration, distance);
+                workout.addExercise(exercise);
+
+                cout << "Cardio exercise added successfully." << endl;
+            }
+            else {
+                cout << "Invalid exercise type." << endl;
+            }
         }
         else if (choice == 2) {
             int index;
-            string name;
-            int sets;
-            int reps;
-            double weight;
+
             workout.displayExercises();
+
             cout << "Enter exercise number to edit: ";
             cin >> index;
             cin.ignore();
-            Exercise* exercise = workout.getExercise(index - 1);
-            if (exercise != nullptr) {
-                cout << "Enter new exercise name: ";
-                getline(cin, name);
-                cout << "Enter new sets: ";
-                cin >> sets;
-                cout << "Enter new reps: ";
-                cin >> reps;
-                cout << "Enter new weight(kg): ";
-                cin >> weight;
+
+            if (workout.getExercise(index - 1) != nullptr) {
+                workout.removeExercise(index - 1);
+
+                cout << "Now enter the new exercise data." << endl;
+
+                int type;
+
+                cout << "1. Strength exercise" << endl;
+                cout << "2. Cardio exercise" << endl;
+                cout << "Choose: ";
+                cin >> type;
                 cin.ignore();
-                exercise->setName(name);
-                exercise->setSets(sets);
-                exercise->setReps(reps);
-                exercise->setWeight(weight);
+
+                if (type == 1) {
+                    string name;
+                    int sets;
+                    int reps;
+                    double weight;
+
+                    cout << "Enter exercise name: ";
+                    getline(cin, name);
+
+                    cout << "Enter sets: ";
+                    cin >> sets;
+
+                    cout << "Enter reps: ";
+                    cin >> reps;
+
+                    cout << "Enter weight: ";
+                    cin >> weight;
+                    cin.ignore();
+
+                    workout.addExercise(new StrengthExercise(name, sets, reps, weight));
+                }
+                else if (type == 2) {
+                    string name;
+                    int duration;
+                    double distance;
+
+                    cout << "Enter exercise name: ";
+                    getline(cin, name);
+
+                    cout << "Enter duration in minutes: ";
+                    cin >> duration;
+
+                    cout << "Enter distance in km: ";
+                    cin >> distance;
+                    cin.ignore();
+
+                    workout.addExercise(new CardioExercise(name, duration, distance));
+                }
+
                 cout << "Exercise edited successfully." << endl;
             }
             else {
@@ -202,15 +281,19 @@ void manageExercises(Workout& workout) {
         }
         else if (choice == 3) {
             int index;
+
             workout.displayExercises();
+
             cout << "Enter exercise number to remove: ";
             cin >> index;
             cin.ignore();
+
             workout.removeExercise(index - 1);
         }
         else if (choice == 4) {
             workout.displayExercises();
         }
+
     } while (choice != 0);
 }
 void workoutHistory(const User& user) {
@@ -219,7 +302,6 @@ void workoutHistory(const User& user) {
     cout << "---------------" << endl;
     user.displayWorkouts();
 }
-
 
 void trackPR(User& user) {
     int choice;
@@ -440,7 +522,6 @@ void inactivityReminder(User& user) {
     }
 }
 
-
 void saveData(User& user) {
     ofstream file("fitness_data.txt");
 
@@ -469,10 +550,21 @@ void saveData(User& user) {
         for (int j = 0; j < workout->getExerciseCount(); j++) {
             Exercise* exercise = workout->getExercise(j);
 
-            file << exercise->getName() << endl;
-            file << exercise->getSets() << endl;
-            file << exercise->getReps() << endl;
-            file << exercise->getWeight() << endl;
+            CardioExercise* cardio = dynamic_cast<CardioExercise*>(exercise);
+
+            if (cardio != nullptr) {
+                file << "Cardio" << endl;
+                file << cardio->getName() << endl;
+                file << cardio->getDuration() << endl;
+                file << cardio->getDistance() << endl;
+            }
+            else {
+                file << "Strength" << endl;
+                file << exercise->getName() << endl;
+                file << exercise->getSets() << endl;
+                file << exercise->getReps() << endl;
+                file << exercise->getWeight() << endl;
+            }
         }
     }
 
@@ -501,7 +593,6 @@ void saveData(User& user) {
 
     cout << "Data saved successfully." << endl;
 }
-
 void loadData(User& user) {
     ifstream file("fitness_data.txt");
 
@@ -557,21 +648,41 @@ void loadData(User& user) {
         file.ignore();
 
         for (int j = 0; j < exerciseCount; j++) {
+            string exerciseType;
             string exerciseName;
-            int sets;
-            int reps;
-            double exerciseWeight;
 
+            getline(file, exerciseType);
             getline(file, exerciseName);
-            file >> sets;
-            file >> reps;
-            file >> exerciseWeight;
-            file.ignore();
 
-            Exercise* exercise = new StrengthExercise(exerciseName, sets, reps, exerciseWeight);
+            if (exerciseType == "Cardio") {
+                int duration;
+                double distance;
 
-            if (savedWorkout != nullptr) {
-                savedWorkout->addExercise(exercise);
+                file >> duration;
+                file >> distance;
+                file.ignore();
+
+                Exercise* exercise = new CardioExercise(exerciseName, duration, distance);
+
+                if (savedWorkout != nullptr) {
+                    savedWorkout->addExercise(exercise);
+                }
+            }
+            else {
+                int sets;
+                int reps;
+                double exerciseWeight;
+
+                file >> sets;
+                file >> reps;
+                file >> exerciseWeight;
+                file.ignore();
+
+                Exercise* exercise = new StrengthExercise(exerciseName, sets, reps, exerciseWeight);
+
+                if (savedWorkout != nullptr) {
+                    savedWorkout->addExercise(exercise);
+                }
             }
         }
     }
